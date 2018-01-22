@@ -1,0 +1,120 @@
+// Visually hidden element.
+@mixin vhidden() {
+  opacity: 0;
+  visibility: hidden;
+}
+
+// Visually display element.
+@mixin vdisplay {
+  opacity: 1;
+  visibility: visible;
+}
+
+// FontAwesome
+%fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin fa($icon) {
+  content: $icon;
+  @extend %fa;
+}
+
+// Font Fleurdesel
+%fleurdesel {
+  font-family: "Fleurdesel-Hotel";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  text-decoration: none;
+  text-transform: none;
+}
+
+@mixin fleurdesel($icon) {
+  content: $icon;
+  @extend %fleurdesel;
+}
+
+// Overlay background
+@mixin overlay($bg: black, $alpha: 0.5, $z-index: 5) {
+  @include absolute(0,0,0,0);
+  background-color: rgba($bg, $alpha);
+  z-index: $z-index;
+}
+
+// PADDING TOP IMAGE
+@mixin paddingTop($width, $height) {
+  content: "";
+  display: block;
+  padding-top: percentage($height/$width);
+}
+
+// STYLE FLEURDESEL
+@mixin fleurstyle($enable: true, $color: #000, $fz: 8px, $position: top, $show: false) {
+  @if ($enable == true) {
+    &:before,
+    &:after {
+      position: absolute;
+      #{$position}: 10px;
+      font-size: #{$fz};
+      color: $color;
+      transition: all .4s ease;
+
+      @include fleurdesel("\ea21");
+
+      @if ($show == false) {
+        @include vhidden();
+      }
+    }
+
+    &:before {
+      left: 10px;
+    }
+
+    &:after {
+      right: 10px;
+    }
+
+    @if ($show == false) {
+      &:hover {
+        &:before, &:after {
+          @include vdisplay();
+        }
+      }
+    }
+
+    &.active {
+      &:before,
+      &:after {
+        position: absolute;
+        #{$position}: 10px;
+        font-size: #{$fz};
+        color: $color;
+        transition: all .4s ease;
+
+        @include fleurdesel("\ea21");
+        @include vdisplay();
+      }
+
+      &:before {
+        left: 10px;
+      }
+
+      &:after {
+        right: 10px;
+      }
+    }
+  } @else {
+    &:before,
+    &:after {
+      display: none;
+    }
+  }
+}
