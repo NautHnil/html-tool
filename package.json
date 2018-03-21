@@ -5,7 +5,7 @@
   "description": "HTML Tool",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rm -r .git dist docs _docpress .travis.yml LICENSE docpress.json"
+    "clean": "rm -rf .git dist docs _docpress .travis.yml LICENSE docpress.json"
   },
   "author": "Naut Hnil",
   "license": "MIT",

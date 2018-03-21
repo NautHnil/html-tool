@@ -108,8 +108,9 @@ gulp.task('images:min', function () {
     use: [pngquant()]
   };
 
-  return gulp.src('./' + projectName + '/assets/images/**/*')
+  return gulp.src('./src/assets/images/**/*')
     .pipe(imagemin({ optimizationLevel: 5 }))
+    .pipe(gulp.dest('./src/assets/images'))
     .pipe(gulp.dest('./' + projectName + '/assets/images'));
 });
 
