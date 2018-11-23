@@ -1,157 +1,257 @@
 const gulp = require('gulp');
 const browserSync = require('browser-sync').create();
-const notify = require('gulp-notify');
-const del = require('del');
+const twig = require('gulp-twig');
+const data = require('gulp-data');
+const beautifyCode = require('gulp-beautify-code');
 const path = require('path');
-const babel = require('gulp-babel');
-const beautifyes6 = require('gulp-beautify');
+const fs = require('fs');
 const sass = require('gulp-sass');
+const babel = require('gulp-babel');
+const concat = require('gulp-concat');
+const uglify = require("gulp-uglify");
 const sourcemaps = require('gulp-sourcemaps');
-const autoprefixer = require('gulp-autoprefixer');
-const rtlcss = require('gulp-rtlcss');
-const cssnano = require('gulp-cssnano');
-const rename = require('gulp-rename');
-const imagemin = require('gulp-imagemin');
-const pngquant = require('imagemin-pngquant');
+const del = require('del');
+const autoprefixer = require("gulp-autoprefixer");
+const rtlcss = require("gulp-rtlcss");
+const cleanCss = require('gulp-clean-css');
+const rename = require("gulp-rename");
+const imagemin = require("gulp-imagemin");
+const pngquant = require("imagemin-pngquant");
+const notify = require("gulp-notify");
+const plumber = require('gulp-plumber');
 
-var projectName = path.basename(__dirname);
+const project_name = 'dist';
+const pathFiles = {
+  sass: {
+    src: ['src/sass/*.scss'],
+    all: ['src/sass/**/*.scss'],
+    dest: ['src/assets/css/']
+  },
+  twig: {
+    data: ['src/data/'],
+    type: 'html',
+    src: ['src/views/*.html'],
+    all: ['src/views/**/*.html', 'src/data/**/*.json'],
+    dest: [project_name]
+  },
+  es7: {
+    src: ['src/scripts/**/*.js'],
+    dest: ['src/assets/js/']
+  },
+  cssFiles: {
+    src: ['src/assets/css/**/*.css'],
+    rtl: ['src/assets/css/style.css'],
+    dest: [project_name + '/assets/css/']
+  },
+  jsFiles: {
+    src: ['src/assets/js/**/*.js'],
+    dest: [project_name + '/assets/js/']
+  },
+  libFiles: {
+    src: ['src/assets/libraries/**/*'],
+    dest: [project_name + '/assets/libraries/']
+  },
+  fontFiles: {
+    src: ['src/assets/fonts/**/*.{eot,svg,ttf,woff,woff2}'],
+    dest: [project_name + '/assets/fonts/']
+  },
+  imageFiles: {
+    src: ['src/assets/images/**/*.{jpg,jpeg,png,svg,ico,gif}'],
+    dest: [project_name + '/assets/images/']
+  }
+};
 
 /**
- * Clean build
+ * Clean build project
  */
-gulp.task('clean:dist', function () {
-  return del('./' + projectName);
+gulp.task('clean', () => {
+  return del([project_name]);
 });
 
-gulp.task('clean', gulp.series('clean:dist'));
-
 /**
- * HTML
+ * Compile Twig/Html files
  */
-gulp.task('html', function () {
-  return gulp.src('./src/*.html')
-    .pipe(gulp.dest('./' + projectName))
+gulp.task('twigFiles', () => {
+  let jsonData = undefined;
+  return gulp.src(pathFiles.twig.src)
+    .pipe(data(function (file) {
+      jsonData = JSON.parse(fs.readFileSync(pathFiles.twig.data + path.basename(file.path).replace(pathFiles.twig.type, '') + 'json'));
+      return jsonData;
+    }))
+    .pipe(twig({
+      data: jsonData
+    }))
+    .pipe(beautifyCode({
+      indent_size: 4,
+      unformatted: ['code', 'pre', 'em', 'strong', 'span', 'i', 'b', 'br'],
+      preserve_newlines: false
+    }))
+    .pipe(gulp.dest(pathFiles.twig.dest))
     .pipe(browserSync.stream());
 });
 
 /**
- * Compile SASS, minify and run stylesheet throught autoperfixer.
+ * Compile ES7 Javascript
  */
-gulp.task('sass', function () {
-  return gulp.src('./src/sass/*.scss')
+gulp.task('es7Files', () => {
+  return gulp.src(pathFiles.es7.src)
     .pipe(sourcemaps.init())
-    .pipe(sass({ outputStyle: 'expanded', errLogToConsole: true }).on('error', sass.logError))
+    .pipe(babel({
+      presets: ['@babel/env']
+    }))
+    .pipe(concat('all.bundle.js'))
+    .pipe(sourcemaps.write('./maps'))
+    .pipe(gulp.dest(pathFiles.es7.dest))
+    .pipe(browserSync.stream());
+});
+
+/**
+ * Compile Sass files
+ */
+sass.compiler = require('node-sass');
+gulp.task('sassFiles', () => {
+  return gulp.src(pathFiles.sass.src)
+    .pipe(plumber({
+      errorHandler: notify.onError("Error: <%= error.message %>")
+    }))
+    .pipe(sourcemaps.init())
+    .pipe(sass.sync({
+      outputStyle: 'expanded',
+      errLogToConsole: true
+    }).on('error', sass.logError))
     .pipe(autoprefixer())
     .pipe(sourcemaps.write('./maps'))
-    .pipe(gulp.dest('./src/assets/css'))
-    .pipe(browserSync.stream({ match: '**/*.css' }));
-});
-
-gulp.task('css', function () {
-  return gulp.src('./src/assets/css/**/*.css')
-    .pipe(autoprefixer())
-    .pipe(gulp.dest('./' + projectName + '/assets/css'))
-    .pipe(browserSync.stream({ match: '**/*.css' }));
-});
-
-gulp.task('css:min', function () {
-  return gulp.src(['./src/assets/css/style.css', './src/assets/css/style-rtl.css'])
-    .pipe(cssnano())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest('./src/assets/css'));
+    .pipe(plumber.stop())
+    .pipe(gulp.dest(pathFiles.sass.dest))
+    .pipe(browserSync.stream({
+      match: "**/*.css"
+    }));
 });
 
 /**
- * Convert stylesheet RTL
+ * RTL stylesheet file
  */
-gulp.task('rtlcss', function () {
-  return gulp.src('./src/assets/css/style.css')
+gulp.task('rtlFile', () => {
+  return gulp.src(pathFiles.cssFiles.rtl)
+    .pipe(sourcemaps.init())
     .pipe(rtlcss())
-    .pipe(rename({ suffix: '-rtl' }))
-    .pipe(gulp.dest('./src/assets/css'));
-});
-
-/**
- * Compile ES6, minify and run js copy
- */
-gulp.task('es6', function () {
-  return gulp.src('./src/scripts/**/*.js')
-    .pipe(babel({
-      presets: ['env']
+    .pipe(rename({
+      suffix: "-rtl"
     }))
-    .pipe(beautifyes6({ indent_size: 2 }))
-    .pipe(gulp.dest('./src/assets/js'))
-    .pipe(browserSync.stream({ match: '**/*.js' }));
-});
-
-gulp.task('js', function () {
-  return gulp.src('./src/assets/js/**/*.js')
-    .pipe(gulp.dest('./' + projectName + '/assets/js'));
+    .pipe(sourcemaps.write("./maps"))
+    .pipe(gulp.dest(pathFiles.sass.dest))
+    .pipe(browserSync.stream({
+      match: "**/*.css"
+    }));
 });
 
 /**
- * Images copy
+ * CSS files
  */
-gulp.task('images', function () {
-  return gulp.src('./src/assets/images/**/*')
-    .pipe(gulp.dest('./' + projectName + '/assets/images'))
+gulp.task('cssFiles', () => {
+  return gulp.src(pathFiles.cssFiles.src)
+    // .pipe(cleanCss({ compatibility: 'ie8' }))
+    .pipe(gulp.dest(pathFiles.cssFiles.dest))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('cssFiles:min', () => {
+  return gulp.src(pathFiles.cssFiles.src)
+    .pipe(cleanCss({ compatibility: 'ie8' }))
+    .pipe(rename({
+      suffix: ".min"
+    }))
+    .pipe(gulp.dest(pathFiles.cssFiles.dest))
     .pipe(browserSync.stream());
 });
 
 /**
- * Minify Images
+ * JS files
  */
-gulp.task('images:min', function () {
+gulp.task('jsFiles', () => {
+  return gulp.src(pathFiles.jsFiles.src)
+    .pipe(gulp.dest(pathFiles.jsFiles.dest))
+    .pipe(browserSync.stream())
+});
+
+gulp.task('jsFiles:min', () => {
+  return gulp.src(pathFiles.jsFiles.src)
+    .pipe(uglify())
+    .pipe(rename({
+      suffix: ".min"
+    }))
+    .pipe(gulp.dest(pathFiles.jsFiles.dest))
+    .pipe(browserSync.stream())
+});
+
+/**
+ * Font files
+ */
+gulp.task('fontFiles', () => {
+  return gulp.src(pathFiles.fontFiles.src)
+    .pipe(gulp.dest(pathFiles.fontFiles.dest))
+    .pipe(browserSync.stream())
+});
+
+/**
+ * Library files
+ */
+gulp.task('libFiles', () => {
+  return gulp.src(pathFiles.libFiles.src)
+    .pipe(gulp.dest(pathFiles.libFiles.dest))
+    .pipe(browserSync.stream())
+});
+
+/**
+ * Image minify files
+ */
+gulp.task('imageFiles', () => {
   var configs = {
     progressive: true,
-    svgoPlugins: [{ removeViewBox: false }],
+    svgoPlugins: [{
+      removeViewBox: false
+    }],
     use: [pngquant()]
   };
 
-  return gulp.src('./src/assets/images/**/*')
-    .pipe(imagemin({ optimizationLevel: 5 }))
-    .pipe(gulp.dest('./src/assets/images'))
-    .pipe(gulp.dest('./' + projectName + '/assets/images'));
-});
-
-/**
- * Fonts copy
- */
-gulp.task('fonts', function () {
-  return gulp.src('./src/assets/fonts/**/*')
-    .pipe(gulp.dest('./' + projectName + '/assets/fonts'))
+  return gulp.src(pathFiles.imageFiles.src, {
+      since: gulp.lastRun('imageFiles')
+    })
+    .pipe(imagemin({
+      optimizationLevel: 5
+    }, configs))
+    .pipe(gulp.dest(pathFiles.imageFiles.dest))
     .pipe(browserSync.stream());
 });
 
 /**
- * Start browsersync and watch change file.
+ * Start browserSync and watch change files
  */
-gulp.task('watch', function () {
+gulp.task('watch', () => {
   browserSync.init({
     server: {
-      baseDir: './' + projectName,
+      baseDir: "./" + project_name,
       directory: false
     }
   });
 
-  gulp.watch('./src/*.html').on('change', gulp.parallel('html'), browserSync.reload());
-
-  gulp.watch('./src/sass/**/*.scss', gulp.parallel('sass', 'rtlcss', 'css:min'));
-
-  gulp.watch('./src/assets/css/**/*.css', gulp.parallel('css'));
-
-  gulp.watch('./src/scripts/**/*.js', gulp.parallel('es6'));
-
-  gulp.watch('./src/assets/js/**/*.js', gulp.parallel('js'));
-
-  gulp.watch('./src/assets/fonts/**/*', gulp.parallel('fonts'));
-
-  gulp.watch('./src/assets/images/**/*', gulp.parallel('images'));
+  gulp.watch(pathFiles.twig.all, gulp.series('twigFiles'));
+  gulp.watch(pathFiles.es7.src, gulp.series('es7Files'));
+  gulp.watch(pathFiles.sass.all, gulp.series('sassFiles', 'rtlFile'));
+  gulp.watch(pathFiles.cssFiles.src, gulp.series('cssFiles', 'cssFiles:min'));
+  gulp.watch(pathFiles.jsFiles.src, gulp.series('jsFiles', 'jsFiles:min'));
+  gulp.watch(pathFiles.imageFiles.src, gulp.series('imageFiles'));
+  gulp.watch(pathFiles.fontFiles.src, gulp.series('fontFiles'));
+  gulp.watch(pathFiles.libFiles.src, gulp.series('libFiles'));
 });
 
 /**
- * Build gulp
+ * Build files
  */
-gulp.task('build', gulp.series('clean', 'html', 'sass', 'rtlcss', 'css:min', 'css', 'es6', 'js', 'fonts', 'images'));
+const build = gulp.series('clean', gulp.parallel('twigFiles', 'sassFiles', 'es7Files'), gulp.parallel('cssFiles', 'cssFiles:min', 'jsFiles', 'jsFiles:min', 'imageFiles', 'fontFiles', 'libFiles'));
+gulp.task('build', build);
 
+/**
+ * Export default task
+ */
 gulp.task('default', gulp.series('build', 'watch'));

@@ -1,0 +1,117 @@
+//
+// Color system
+//
+
+$color_1: #46608e;
+$color_2: #abcfe9;
+
+$arr-colors-name: ();
+$arr-colors-name: map-merge(
+  (),
+  $arr-colors-name
+);
+
+$arr-colors-number: ();
+$arr-colors-number: map-merge(
+  (),
+  $arr-colors-number
+);
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-color: #666666;
+
+// Links
+//
+// Style anchor elements.
+
+// $link-color: theme-color("primary");
+$link-decoration: none;
+// $link-hover-color: $color_2;
+$link-hover-decoration: none;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+// stylelint-disable value-keyword-case
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+  "Segoe UI Symbol", "Noto Color Emoji";
+$font-poppins: "Poppins", $font-family-sans-serif;
+$font-playfair-display: "Playfair Display", $font-family-sans-serif;
+$font-family-base: $font-poppins;
+// stylelint-enable value-keyword-case
+
+$font-size-root: 16px;
+$font-size-base: 1rem; // Assumes the browser default, typically `16px`
+$font-size-lg: ($font-size-base * 1.25);
+$font-size-sm: ($font-size-base * 0.875);
+
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+$font-weight-black: 900;
+
+$arr-font-weight: ();
+$arr-font-weight: map-merge(
+  (
+    "light": $font-weight-light,
+    "normal": $font-weight-normal,
+    "bold": $font-weight-bold,
+    "black": $font-weight-black
+  ),
+  $arr-font-weight
+);
+
+$font-weight-base: $font-weight-normal;
+$line-height-base: 1.5;
+
+$h1-font-size: $font-size-base * 16.25; // 260px
+$h2-font-size: $font-size-base * 10.625; // 170px
+$h3-font-size: $font-size-base * 5.625; // 90px
+$h4-font-size: $font-size-base * 3.75; // 60px
+$h5-font-size: $font-size-base * 3.125; // 50px
+$h6-font-size: $font-size-base * 1.875; // 30px
+
+$arr-font-size: ();
+$arr-font-size: map-merge(
+  (
+    "16": $font-size-base,
+    "17": $font-size-base * 1.0625,
+    "24": $font-size-base * 1.5,
+    "30": $h6-font-size,
+    "45": $font-size-base * 2.8125,
+    "50": $h5-font-size,
+    "60": $h4-font-size,
+    "70": $font-size-base * 4.375,
+    "85": $font-size-base * 5.3125,
+    "90": $h3-font-size,
+    "170": $h2-font-size,
+    "260": $h1-font-size
+  ),
+  $arr-font-size
+);
+
+$headings-font-weight: $font-weight-black;
+$headings-line-height: 1.2;
+
+$arr-line-height: ();
+$arr-line-height: map-merge(
+  (
+    "1": 1,
+    "base": $line-height-base,
+    "2": 2
+  ),
+  $arr-line-height
+);
+
+// FontAwesome
+
+$fa-font-path: "../fonts/fontawesome-5.5.0";

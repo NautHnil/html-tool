@@ -1,31 +1,40 @@
 {
-  "private": true,
   "name": "html-tool",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "HTML Tool",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "rm -rf .git dist docs _docpress .travis.yml LICENSE docpress.json"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Naut Hnil",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com:html-front-end/html-tool.git"
+  },
+  "keywords": [],
+  "author": "xSpidey & xdesky",
+  "license": "ISC",
+  "homepage": "https://gitlab.com/html-front-end/html-tool#readme",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "browser-sync": "^2.24.6",
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "browser-sync": "^2.26.3",
     "del": "^3.0.0",
-    "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-autoprefixer": "^5.0.0",
-    "gulp-babel": "^7.0.1",
-    "gulp-beautify": "^2.0.1",
-    "gulp-cssnano": "^2.1.3",
-    "gulp-imagemin": "^4.1.0",
-    "gulp-minify": "^3.1.0",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-beautify-code": "^2.0.3",
+    "gulp-clean-css": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-data": "^1.3.1",
+    "gulp-imagemin": "^5.0.3",
     "gulp-notify": "^3.2.0",
+    "gulp-plumber": "^1.2.0",
     "gulp-rename": "^1.4.0",
-    "gulp-rtlcss": "^1.2.0",
-    "gulp-sass": "^4.0.1",
+    "gulp-rtlcss": "^1.3.0",
+    "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.4",
-    "imagemin-pngquant": "^6.0.0"
+    "gulp-twig": "^1.2.0",
+    "gulp-uglify": "^3.0.1",
+    "imagemin-pngquant": "^6.0.0",
+    "node-sass": "^4.10.0"
   }
 }

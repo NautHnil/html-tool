@@ -1,13 +1,13 @@
-# HTML TOOL
+# HTML Tool
 
 ## Install
 
 Make sure you have `npm` and `gulp 4` installed on your system.
 
-Download this [repo]() or clone to your computer.
+Download this [repo](https://gitlab.com/html-front-end/html-tool/-/archive/master/html-tool-master.zip) or clone to your computer.
 
 ```
-git clone...
+git clone git@gitlab.com:html-front-end/html-tool.git
 ```
 
 ### Installing gulp 4 globally
@@ -26,19 +26,19 @@ To verify what version you have installed globally, you can run the below comman
 
 ```
 $ gulp -v
-CLI version 2.0.0
+CLI version 2.0.1
 ```
 
 ## Preview
 
-[VIEW DEMO]()
+[VIEW DEMO](#)
 
 ## How to run
 
 Open your terminal (cmd) and run commands below:
 
 ```
-cd project-name-folder
+cd html-tool
 npm install
 gulp
 ```
