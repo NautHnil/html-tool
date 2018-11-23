@@ -31,7 +31,7 @@ session
 npm-debug.log
 .env
 
-dist-min/
+dist/
 node_modules/
 .vscode/
 
