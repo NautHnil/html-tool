@@ -7,12 +7,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com:html-front-end/html-tool.git"
+    "url": "git+ssh://git@github.com:NautHnil/html-tool.git"
   },
   "keywords": [],
-  "author": "xSpidey & xdesky",
-  "license": "ISC",
-  "homepage": "https://gitlab.com/html-front-end/html-tool#readme",
+  "author": "xSpidey",
+  "license": "MIT",
+  "homepage": "https://github.com/NautHnil/html-tool#readme",
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@babel/preset-env": "^7.1.6",

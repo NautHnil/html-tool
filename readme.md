@@ -4,12 +4,6 @@
 
 Make sure you have `npm` and `gulp 4` installed on your system.
 
-Download this [repo](https://gitlab.com/html-front-end/html-tool/-/archive/master/html-tool-master.zip) or clone to your computer.
-
-```
-git clone git@gitlab.com:html-front-end/html-tool.git
-```
-
 ### Installing gulp 4 globally
 
 You will need to remove your current gulp global package before installing v4 in order to do an upgrade.
@@ -29,16 +23,69 @@ $ gulp -v
 CLI version 2.0.1
 ```
 
-## Preview
-
-[VIEW DEMO](#)
 
 ## How to run
 
 Open your terminal (cmd) and run commands below:
 
 ```
-cd html-tool
+cd project_folder
 npm install
 gulp
 ```
+
+
+## Preview
+
+[VIEW DEMO](#)
+
+
+## Twig template engine
+
+- [Documentation: Vietnamese](https://viblo.asia/p/twig-trong-template-DZrGNNLjGVB)
+
+- [Documentation: English](https://twig.symfony.com/doc/2.x/templates.html)
+
+
+## Project structure folder
+
+    .
+    ├── dist                     # Compiled files
+    ├── src                      # Source files
+    │   ├── assets
+    │   │   ├── css
+    │   │   ├── fonts
+    │   │   ├── images
+    │   │   ├── js
+    │   │   └── libraries
+    │   ├── data
+    │   ├── sass
+    │   │   ├── base
+    │   │   ├── components
+    │   │   ├── layouts
+    │   │   ├── libraries
+    │   │   ├── mixins
+    │   │   └── style.scss
+    │   ├── scripts
+    │   └── views
+    │       ├── parts
+    │       │   ├── components
+    │       │   ├── extras
+    │       │   ├── includes
+    │       │   │   └── sidebar
+    │       │   └── pages
+    │       ├── shared
+    │       │   └── layout.html
+    │       └── index.html
+    └── README.md
+
+> Add new page & Add new data.
+>
+> Ex: `src/views/page_name.html`, `src/data/page_name.json`
+
+## Libraries CSS/JS/FONTS
+
+- Bootstrap 4: [https://getbootstrap.com/docs/4.1/getting-started/introduction/](https://getbootstrap.com/docs/4.1/getting-started/introduction/)
+- Swiper Slide: [https://idangero.us/swiper/demos/](https://idangero.us/swiper/demos/)
+- PhotoSwipe: [http://photoswipe.com/](http://photoswipe.com/)
+- FontAwesome 5: [https://fontawesome.com/icons?d=gallery](https://fontawesome.com/icons?d=gallery)
